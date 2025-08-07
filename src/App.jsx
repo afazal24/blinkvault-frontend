@@ -14,8 +14,7 @@ import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import SignupStep1 from "./pages/SignupStep1";
-import SignupStep2 from "./pages/SignupStep2";
+import Signup from "./pages/Signup"; 
 import ForgotPassword from "./pages/ForgotPassword";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -29,11 +28,11 @@ import Following from "./pages/Following";
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
 import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
+// ✅ STEP 1: Import the new VerifyEmail page
+import VerifyEmail from "./pages/VerifyEmail";
 
 const NotFoundPage = () => <h2 className="text-center mt-20 text-xl font-semibold">404 | Page Not Found</h2>;
 
-// This component contains the main layout of your app.
-// It will ONLY render after the AuthProvider has finished loading the user.
 const AppLayout = () => {
   const { user } = useAuth(); 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -50,8 +49,9 @@ const AppLayout = () => {
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignupStep1 />} />
-              <Route path="/signup/verify" element={<SignupStep2 />} />
+              <Route path="/signup" element={<Signup />} />
+              {/* ✅ STEP 2: Add the route for the verification page */}
+              <Route path="/verify-email/:token" element={<VerifyEmail />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/terms" element={<TermsAndConditions />} />
 
@@ -80,12 +80,11 @@ const AppLayout = () => {
   );
 };
 
-// The main App component that handles splash screen and providers
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 2000); // Shorter splash time
+    const timer = setTimeout(() => setShowSplash(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -98,7 +97,6 @@ const App = () => {
       <Router>
         <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
         <AdminProvider>
-          {/* AuthProvider now wraps the entire AppLayout */}
           <AuthProvider> 
             <AppLayout />
           </AuthProvider>
